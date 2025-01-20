@@ -1,14 +1,14 @@
 <?php
 
-require 'Validator.php';
+require base_path('Core/Validator.php');
 
-$config = require 'config.php';
+$config = require base_path('config.php');
 $db = new Database($config['database']);
 
-$heading = 'Create Post';
+$errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-   $errors = [];
+
 
    if (!Validator::string($_POST['title'], 1, 100)) {
       $errors['title'] = 'Title should be greater than 1 and less than 100 characters';
@@ -23,4 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    }
 }
 
-require "views/posts/create.view.php";
+view("posts/create.view.php", [
+   'heading' => 'Create Post',
+   'errors' => $errors
+]);

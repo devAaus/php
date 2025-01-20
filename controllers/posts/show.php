@@ -1,9 +1,8 @@
 <?php
 
-$config = require 'config.php';
+$config = require base_path('config.php');
 $db = new Database($config['database']);
 
-$heading = 'Post';
 $currentUserId = 1;
 
 $post = $db->query('select * from posts where id = :id', [
@@ -12,4 +11,8 @@ $post = $db->query('select * from posts where id = :id', [
 
 authorize($post['user_id'] === $currentUserId);
 
-require "views/posts/show.view.php";
+
+view("posts/show.view.php", [
+   'heading' => 'Post',
+   'post' => $post
+]);
