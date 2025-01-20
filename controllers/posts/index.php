@@ -7,4 +7,4 @@ $heading = 'Posts';
 
 $posts = $db->query('select * from posts where user_id = 1')->get();
 
-require "views/posts.view.php";
+require "views/posts/index.view.php";
