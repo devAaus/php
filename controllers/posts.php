@@ -5,6 +5,6 @@ $db = new Database($config['database']);
 
 $heading = 'Posts';
 
-$posts = $db->query('select * from posts where user_id = 4')->fetchAll();
+$posts = $db->query('select * from posts where user_id = 1')->get();
 
 require "views/posts.view.php";
