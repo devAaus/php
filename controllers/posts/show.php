@@ -7,14 +7,31 @@ $db = new Database($config['database']);
 
 $currentUserId = 1;
 
-$post = $db->query('select * from posts where id = :id', [
-   'id' => $_GET['id']
-])->findOrFail();
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-authorize($post['user_id'] === $currentUserId);
+   $post = $db->query('select * from posts where id = :id', [
+      'id' => $_GET['id']
+   ])->findOrFail();
 
+   authorize($post['user_id'] === $currentUserId);
 
-view("posts/show.view.php", [
-   'heading' => 'Post',
-   'post' => $post
-]);
+   // form was submitted. delete the current post.
+   $db->query('DELETE FROM posts WHERE id = :id', [
+      'id' => $_GET['id']
+   ]);
+
+   header('location: /posts');
+   exit();
+} else {
+
+   $post = $db->query('select * from posts where id = :id', [
+      'id' => $_GET['id']
+   ])->findOrFail();
+
+   authorize($post['user_id'] === $currentUserId);
+
+   view("posts/show.view.php", [
+      'heading' => 'Post',
+      'post' => $post
+   ]);
+}
