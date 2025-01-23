@@ -31,22 +31,22 @@ $user = $db->query('select * from users where email = :email', [
    'email' => $email
 ])->find();
 
-// if the user already exists, redirect the user to the login form with an error message.
+
+// If the user already exists, return the form with an error message
 if ($user) {
-   header('location: /');
-   exit();
-} else {
-   // if the user does not exist, create the user and log them in.
-   $db->query('INSERT INTO users(email, password) VALUES(:email, :password)', [
-      'email' => $email,
-      'password' => password_hash($password, PASSWORD_BCRYPT)
+   return view('registration/create.view.php', [
+      'errors' => [
+         'email' => 'Email already exists.'
+      ]
    ]);
-
-   $_SESSION['user'] = [
-      'email' => $email
-   ];
-
-   // redirect the user to the home page.
-   header('location: /');
-   exit();
 }
+
+// If the user does not exist, create the user and redirect to login
+$db->query('INSERT INTO users(email, password) VALUES(:email, :password)', [
+   'email' => $email,
+   'password' => password_hash($password, PASSWORD_BCRYPT)
+]);
+
+// Redirect the user to the login page
+header('location: /login');
+exit();
